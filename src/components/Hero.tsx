@@ -34,13 +34,13 @@ const Hero = () => {
   ];
 
   return (
-    <section id="accueil" className="relative min-h-screen pt-20 bg-gradient-to-b from-brand-cream to-brand-cream-light overflow-hidden">
+    <section id="accueil" className="relative min-h-screen pt-20 bg-gradient-to-b from-brand-cream to-brand-cream-50 overflow-hidden">
       {/* Logo en arrière-plan */}
       <div className="absolute inset-0 flex items-center justify-center opacity-20">
         <img 
-          src="/images/nousrire_bg.png" 
+          src="/images/maraude_bg.png" 
           alt="Background Logo" 
-          className="w-[150%] h-[150%] object-cover"
+          className="w-[120%] h-[120%] object-cover"
         />
       </div>
 
@@ -60,7 +60,7 @@ const Hero = () => {
               Ensemble, luttons contre la précarité alimentaire
             </h1>
             <p className="text-lg text-brand-pink-dark/80 mb-8">
-              Nous'Rire est une association caritative qui s'engage à distribuer des denrées alimentaires 
+              Maraude 92 est une association caritative qui s'engage à distribuer des denrées alimentaires 
               aux personnes dans le besoin. Notre mission est de garantir l'accès à une alimentation 
               saine et équilibrée pour tous.
             </p>
@@ -121,4 +121,4 @@ const Hero = () => {
   );
 };
 
-export default Hero; 
+export default Hero;

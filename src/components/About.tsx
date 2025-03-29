@@ -24,7 +24,7 @@ const About = () => {
   };
 
   return (
-    <div className="relative py-24 bg-gradient-to-b from-brand-cream-100 via-brand-cream-50 to-white">
+    <div className="relative py-24 bg-gradient-to-b from-brand-cream-50 via-brand-cream-100 to-white">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <motion.div 
           className="text-center mb-16"
@@ -115,7 +115,7 @@ const About = () => {
                   Notre Histoire
                 </h3>
                 <p className="text-brand-pink-600 text-lg leading-relaxed">
-                  Nous'Rire est née de la volonté de citoyens engagés de lutter contre la précarité
+                  La Maraude 92 est née de la volonté de citoyens engagés de lutter contre la précarité
                   alimentaire. Depuis notre création, nous nous efforçons d'apporter une aide
                   concrète aux personnes dans le besoin, en distribuant des repas et en créant
                   des moments de partage et de convivialité.
@@ -124,7 +124,7 @@ const About = () => {
               <div className="relative h-64 md:h-full rounded-xl overflow-hidden">
                 <img
                   src="https://static.actu.fr/uploads/2022/02/25432-220201101007218-0.jpg"
-                  alt="Bénévoles Nous'Rire"
+                  alt="Benévoles de l'association"
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -49,7 +49,7 @@ const News = () => {
             Dernières Actualités
           </h2>
           <p className="text-xl text-brand-pink-600 max-w-3xl mx-auto">
-            Restez informé des dernières actions et initiatives de Nous'Rire
+            Restez informé des dernières actions et initiatives de Maraude 92
           </p>
         </motion.div>
 

@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { 
   EnvelopeIcon, 
-  PhoneIcon, 
-  MapPinIcon 
+  // PhoneIcon, 
+  // MapPinIcon 
 } from '@heroicons/react/24/outline';
 
 const Footer = () => {
@@ -36,13 +36,13 @@ const Footer = () => {
     ],
     contact: [
       { label: 'nousrire.contact@gmail.com', href: 'mailto:nousrire.contact@gmail.com', icon: EnvelopeIcon },
-      { label: '01 23 45 67 89', href: 'tel:0123456789', icon: PhoneIcon },
-      { label: '123 Rue de la Distribution, Paris', href: 'https://maps.google.com', icon: MapPinIcon },
+      // { label: '01 23 45 67 89', href: 'tel:0123456789', icon: PhoneIcon },
+      // { label: '123 Rue de la Distribution, Paris', href: 'https://maps.google.com', icon: MapPinIcon },
     ],
     social: [
       { 
         label: 'Instagram',
-        href: 'https://instagram.com',
+        href: 'https://www.instagram.com/maraude092?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
         icon: () => (
           <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12,2.16c3.2,0,3.58,0,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s0,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58,0-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s0-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33,0,7.05.07c-4.27.2-6.78,2.71-7,7C0,8.33,0,8.74,0,12s0,3.67.07,4.95c.2,4.27,2.71,6.78,7,7C8.33,24,8.74,24,12,24s3.67,0,4.95-.07c4.27-.2,6.78-2.71,7-7C24,15.67,24,15.26,24,12s0-3.67-.07-4.95c-.2-4.27-2.71-6.78-7-7C15.67,0,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/>
@@ -75,8 +75,8 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
             <a href="/" className="block mb-6">
               <img
-                src="/images/nousrire_logo.svg"
-                alt="Nous'Rire Logo"
+                src="/images/maraude_logo.svg"
+                alt="Maraude 92 Logo"
                 className="h-12 w-auto"
               />
             </a>
@@ -151,7 +151,7 @@ const Footer = () => {
           variants={itemVariants}
           className="border-t border-brand-pink-200 mt-12 pt-8 text-center text-brand-pink-700/60"
         >
-          <p>© {new Date().getFullYear()} Nous'Rire. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} Maraude 92. Tous droits réservés.</p>
         </motion.div>
       </motion.div>
     </footer>

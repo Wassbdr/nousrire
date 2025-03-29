@@ -1,6 +1,6 @@
-# Nous'Rire - Site Web de l'Association
+# Maraude 92 - Site Web de l'Association
 
-Ce projet est le site web de l'association Nous'Rire, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité.
+Ce projet est le site web de l'association Maraude 92, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité.
 
 ## Technologies Utilisées
 

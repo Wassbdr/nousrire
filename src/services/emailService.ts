@@ -13,7 +13,7 @@ export const sendVolunteerEmail = async (formData: any) => {
       {
         to_email: formData.email,
         to_name: formData.name,
-        message: `Bonjour ${formData.name},\n\nNous avons bien reçu votre demande pour devenir bénévole. Nous vous contacterons très prochainement.\n\nCordialement,\nL'équipe Nous'Rire`,
+        message: `Bonjour ${formData.name},\n\nNous avons bien reçu votre demande pour devenir bénévole. Nous vous contacterons très prochainement.\n\nCordialement,\nL'équipe Maraude 92`,
         reply_to: formData.email
       },
       PUBLIC_KEY

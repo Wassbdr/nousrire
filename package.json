@@ -1,7 +1,7 @@
 {
   "name": "nourir",
   "version": "0.1.0",
-  "homepage": "https://nousrire.netlify.app",
+  "homepage": "https://maraude.netlify.app",
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^3.11.0",
