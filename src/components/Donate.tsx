@@ -52,16 +52,21 @@ const Donate = () => {
           <p className="text-brand-pink-600 mb-8">
             Cliquez sur le bouton ci-dessous pour faire un don sécurisé via PayPal
           </p>
-          <a
-            href="
-www.paypal.me/maraude092?locale.x=fr_FR"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-brand-pink-500 hover:bg-brand-pink-600 text-white 
-              py-3 px-8 rounded-full font-medium transition-colors duration-300"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-8"
           >
-            Faire un don
-          </a>
+            <a
+              href="https://www.paypal.me/maraude092"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 transition-colors duration-200"
+            >
+              Faire un don via PayPal
+            </a>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>
