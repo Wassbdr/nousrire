@@ -1,7 +1,7 @@
 {
   "name": "nourir",
   "version": "0.1.0",
-  "homepage": "https://wassimwassim.github.io/nourir",
+  "homepage": "https://nousrire.netlify.app",
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^3.11.0",
@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "autoprefixer": "^10.4.18",
     "gh-pages": "^6.3.0",
     "postcss": "^8.4.35",
