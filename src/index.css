@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Bayon&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
+  body {
+    @apply text-brand-pink-900 bg-white;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100%;
+    overflow-y: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-medium
+      transition-all duration-300 transform hover:scale-105 active:scale-95
+      focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-pink-500 text-white hover:bg-brand-pink-600
+      focus:ring-brand-pink-500;
+  }
+
+  .btn-secondary {
+    @apply btn border-2 border-brand-pink-500 text-brand-pink-500
+      hover:bg-brand-pink-500 hover:text-white focus:ring-brand-pink-500;
+  }
+
+  .input {
+    @apply w-full px-4 py-2 rounded-lg border border-brand-pink-200
+      focus:border-brand-pink-500 focus:ring-2 focus:ring-brand-pink-200
+      outline-none transition-colors duration-300;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-lg p-8 transition-all duration-300
+      hover:shadow-xl transform hover:-translate-y-1;
+  }
+
+  .section {
+    @apply py-24;
+  }
+
+  .gradient-fade {
+    @apply bg-gradient-fade from-brand-cream-100 via-brand-cream-50 to-white;
+  }
+
+  .font-bayon {
+    font-family: 'Bayon', sans-serif;
+  }
+
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-pink-500 to-brand-pink-700;
+  }
+}
