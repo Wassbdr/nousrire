@@ -1,12 +1,8 @@
 import emailjs from '@emailjs/browser';
 
-const SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
-const PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
-
-if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-  throw new Error('Les clés EmailJS ne sont pas configurées. Veuillez vérifier votre fichier .env');
-}
+const SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID || '';
+const TEMPLATE_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || '';
+const PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || '';
 
 export const sendVolunteerEmail = async (formData: any) => {
   try {
@@ -36,12 +32,9 @@ export const sendVolunteerEmail = async (formData: any) => {
       PUBLIC_KEY
     );
 
-    return { success: true };
+    return true;
   } catch (error) {
     console.error('Erreur lors de l\'envoi de l\'email:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'envoi de l\'email'
-    };
+    return false;
   }
 }; 
