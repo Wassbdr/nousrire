@@ -1,14 +1,28 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('accueil');
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 20);
+      
+      // Détection de la section active
+      const sections = document.querySelectorAll('section[id]');
+      const scrollY = window.pageYOffset;
+      
+      sections.forEach(section => {
+        const sectionElement = section as HTMLElement;
+        const sectionHeight = sectionElement.offsetHeight;
+        const sectionTop = sectionElement.offsetTop - 100;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+          setActiveSection(sectionId || 'accueil');
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -19,11 +33,11 @@ const Navbar = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      setIsOpen(false);
     }
+    setIsOpen(false);
   };
 
-  const navItems = [
+  const navLinks = [
     { id: 'accueil', label: 'Accueil' },
     { id: 'mission', label: 'Mission' },
     { id: 'actions', label: 'Actions' },
@@ -34,85 +48,99 @@ const Navbar = () => {
   ];
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 backdrop-blur-sm shadow-lg' : 'bg-transparent'
-      }`}
-    >
-      {/* Navbar Container With Logo*/}
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${
+      scrolled ? 'bg-white/90 shadow-md' : 'bg-transparent'
+    }`}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center space-x-2"
-          >
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex items-center">
             <img
               src="/images/nousrire_logo.svg"
-              alt="Nousrire Logo"
+              alt="Nous'Rire Logo"
               className="h-12 w-auto transform hover:scale-105 transition-transform duration-300"
             />
-            <span className="text-2xl font-bayon text-brand-pink-700">
+            <span className="font-bayon text-2xl text-brand-pink-700 ml-2 uppercase tracking-wider">
               Nous'Rire
             </span>
-          </motion.div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => scrollToSection(item.id)}
-                className="text-brand-pink-600 hover:text-brand-pink-700 font-medium transition-colors"
-              >
-                {item.label}
-              </motion.button>
-            ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-brand-pink-600 hover:text-brand-pink-700"
-          >
-            {isOpen ? (
-              <XMarkIcon className="h-6 w-6" />
-            ) : (
-              <Bars3Icon className="h-6 w-6" />
-            )}
-          </motion.button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden"
-          >
-            <div className="py-4 space-y-4">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ x: 10 }}
-                  onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left text-brand-pink-600 hover:text-brand-pink-700 font-medium transition-colors"
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex flex-grow justify-center items-center">
+            <div className="flex items-center space-x-6">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className={`relative py-2 text-base font-medium transition-colors whitespace-nowrap
+                    ${activeSection === link.id
+                      ? 'text-brand-pink-500'
+                      : 'text-brand-pink-700 hover:text-brand-pink-500'
+                    }
+                    after:content-[''] after:absolute after:bottom-0 after:left-0 
+                    after:w-full after:h-0.5 after:bg-brand-pink-500
+                    after:transform after:scale-x-0 after:transition-transform
+                    hover:after:scale-x-100
+                    ${activeSection === link.id ? 'after:scale-x-100' : ''}
+                  `}
                 >
-                  {item.label}
-                </motion.button>
+                  {link.label}
+                </button>
               ))}
             </div>
-          </motion.div>
-        )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-brand-pink-700 hover:text-brand-pink-500 focus:outline-none"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <div
+          className={`md:hidden transition-all duration-300 ease-in-out ${
+            isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+          } overflow-hidden bg-white shadow-lg rounded-b-lg`}
+        >
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => scrollToSection(link.id)}
+                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium
+                  ${activeSection === link.id
+                    ? 'bg-brand-pink-50 text-brand-pink-500'
+                    : 'text-brand-pink-700 hover:bg-brand-pink-50 hover:text-brand-pink-500'
+                  }
+                `}
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 
-export default Navbar;
+export default Navbar; 
