@@ -66,8 +66,8 @@ const News = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-            <h2 className="font-bayon text-4xl md:text-5xl text-brand-pink-700 mb-4">
-            Dernières actualités
+            <h2 className="text-4xl md:text-5xl text-brand-pink-700 mb-10 font-bold">
+            Dernières Actualités
             </h2>
           <p className="text-xl text-brand-pink-600 max-w-3xl mx-auto">
             Restez informé des dernières actions et initiatives de Maraude 92
