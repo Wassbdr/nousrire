@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CalendarIcon } from '@heroicons/react/24/outline';
+import { getEvents } from '../services/firestoreService';
 
 interface Event {
   id: string;
@@ -11,13 +12,41 @@ interface Event {
 
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedEvents = localStorage.getItem('events');
-    if (savedEvents) {
-      setEvents(JSON.parse(savedEvents));
-    }
+    const fetchEvents = async () => {
+      try {
+        const eventsData = await getEvents();
+        setEvents(eventsData);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching events:", err);
+        setError("Erreur lors du chargement des événements");
+        setLoading(false);
+      }
+    };
+    
+    fetchEvents();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-12">
+        <CalendarIcon className="mx-auto h-12 w-12 text-brand-pink-400" />
+        <p className="mt-4 text-brand-pink-600">Chargement des événements...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="mt-4 text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   if (events.length === 0) {
     return (
@@ -106,4 +135,4 @@ const Events = () => {
   );
 };
 
-export default Events; 
+export default Events;

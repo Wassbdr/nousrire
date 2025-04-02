@@ -1,57 +1,54 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from "react";
+import { 
+  signInWithEmailAndPassword, 
+  signOut,
+  onAuthStateChanged,
+  User
+} from "firebase/auth";
+import { auth } from "../config/firebase";
 
 interface AuthContextType {
+  currentUser: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Vérifier si l'utilisateur est déjà connecté
-    const token = localStorage.getItem('adminToken');
-    if (token === 'admin-token') {
-      setIsAuthenticated(true);
-    } else {
-      // Si le token n'est pas valide, le supprimer
-      localStorage.removeItem('adminToken');
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+    return unsubscribe;
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const adminEmail = process.env.REACT_APP_ADMIN_EMAIL;
-      const adminPassword = process.env.REACT_APP_ADMIN_PASSWORD;
-
-      if (!adminEmail || !adminPassword) {
-        console.error('Variables d\'environnement manquantes');
-        return false;
-      }
-
-      if (email === adminEmail && password === adminPassword) {
-        localStorage.setItem('adminToken', 'admin-token');
-        setIsAuthenticated(true);
-        return true;
-      }
-
-      return false;
+      await signInWithEmailAndPassword(auth, email, password);
+      return true;
     } catch (error) {
-      console.error('Erreur lors de la connexion:', error);
+      console.error("Login error:", error);
       return false;
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('adminToken');
-    setIsAuthenticated(false);
-  };
+  const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ 
+      currentUser, 
+      isAuthenticated: !!currentUser, 
+      login, 
+      logout,
+      loading
+    }}>
       {children}
     </AuthContext.Provider>
   );
@@ -59,8 +56,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
-}; 
+};

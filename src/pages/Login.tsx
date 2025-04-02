@@ -9,6 +9,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState<Date | null>(null);
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,16 +24,37 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check if account is locked
+    if (lockoutUntil && new Date() < lockoutUntil) {
+      const minutes = Math.ceil((lockoutUntil.getTime() - new Date().getTime()) / 60000);
+      setError(`Trop de tentatives. Réessayez dans ${minutes} minute${minutes > 1 ? 's' : ''}.`);
+      return;
+    }
+
     setError('');
     setSuccess('');
     setIsLoading(true);
-    
+
     try {
       const success = await login(email, password);
       if (success) {
+        // Reset login attempts on success
+        setLoginAttempts(0);
         setSuccess('Connexion réussie ! Redirection...');
       } else {
-        setError('Email ou mot de passe incorrect');
+        // Increment login attempts and check for lockout
+        const newAttempts = loginAttempts + 1;
+        setLoginAttempts(newAttempts);
+
+        if (newAttempts >= 5) {
+          const lockout = new Date();
+          lockout.setMinutes(lockout.getMinutes() + 15); // 15-minute lockout
+          setLockoutUntil(lockout);
+          setError('Trop de tentatives. Compte bloqué pendant 15 minutes.');
+        } else {
+          setError(`Email ou mot de passe incorrect. (${5 - newAttempts} tentatives restantes)`);
+        }
       }
     } catch (err) {
       setError('Une erreur est survenue lors de la connexion');
@@ -120,4 +143,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

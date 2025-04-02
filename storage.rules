@@ -1,0 +1,22 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Function to verify if user is an admin
+    function isAdmin() {
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    // News images can be read by anyone but only uploaded by admins
+    match /news-images/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Default deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -2,28 +2,49 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-
-interface NewsItem {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  image?: string;
-}
+import { getNews } from '../services/firestoreService';
+import { NewsItem } from '../types';  // Import the shared type
 
 const News = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedNews = localStorage.getItem('news');
-    if (savedNews) {
-      const parsedNews = JSON.parse(savedNews);
-      const sortedNews = parsedNews
-        .sort((a: NewsItem, b: NewsItem) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 3);
-      setNews(sortedNews);
-    }
+    const fetchNews = async () => {
+      try {
+        const newsData = await getNews();
+        setNews(newsData.slice(0, 3)); // Get only the 3 most recent news items
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching news:", err);
+        setError("Erreur lors du chargement des actualités");
+        setLoading(false);
+      }
+    };
+    
+    fetchNews();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="relative py-24">
+        <div className="relative text-center py-12">
+          <p className="text-brand-pink-600 text-lg">Chargement des actualités...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="relative py-24">
+        <div className="relative text-center py-12">
+          <p className="text-red-600 text-lg">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!news.length) {
     return (
@@ -91,4 +112,4 @@ const News = () => {
   );
 };
 
-export default News; 
+export default News;

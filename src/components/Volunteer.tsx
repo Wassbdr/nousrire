@@ -3,6 +3,7 @@ import { CalendarIcon, ClockIcon, MapPinIcon, HeartIcon } from '@heroicons/react
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { sendVolunteerEmail } from '../services/emailService';
+import DOMPurify from 'dompurify';
 
 interface Distribution {
   id: string;
@@ -23,6 +24,7 @@ const Volunteer = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [error, setError] = useState<string | null>(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,14 +51,50 @@ const Volunteer = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Basic validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+      setSubmitStatus('error');
+      setError('Tous les champs sont obligatoires');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setSubmitStatus('error');
+      setError('Veuillez entrer une adresse email valide');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    // Phone validation
+    const phoneRegex = /^(\+\d{1,3})?\d{9,10}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
+      setSubmitStatus('error');
+      setError('Veuillez entrer un numéro de téléphone valide');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    // Sanitize data before sending
+    const sanitizedData = {
+      name: DOMPurify.sanitize(formData.name.trim()),
+      email: DOMPurify.sanitize(formData.email.trim()),
+      phone: DOMPurify.sanitize(formData.phone.trim()),
+      message: DOMPurify.sanitize(formData.message.trim()),
+      distribution: formData.distribution
+    };
+    
     try {
-      const success = await sendVolunteerEmail(formData);
+      const success = await sendVolunteerEmail(sanitizedData);
       setSubmitStatus(success ? 'success' : 'error');
       if (success) {
         setFormData({ name: '', email: '', phone: '', message: '', distribution: selectedDistribution?.id || '' });
       }
     } catch (error) {
       setSubmitStatus('error');
+      setError('Une erreur est survenue. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
@@ -202,7 +240,7 @@ const Volunteer = () => {
 
             {submitStatus === 'error' && (
               <div className="p-4 bg-red-50 text-red-700 rounded-lg">
-                Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.
+                {error || "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer."}
               </div>
             )}
           </motion.form>
@@ -212,4 +250,4 @@ const Volunteer = () => {
   );
 };
 
-export default Volunteer; 
+export default Volunteer;

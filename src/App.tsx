@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import AdminRoute from './components/AdminRoute';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -53,7 +54,11 @@ const AppContent = () => {
           }
         />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        } />
       </Routes>
       {isHomePage && <Footer />}
     </div>
@@ -70,4 +75,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; 
+export default App;
