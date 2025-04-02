@@ -31,7 +31,6 @@ coverage/
 
 # Répertoire des configurations Firebase locales (si présent)
 .firebase/
-.firebase/*
 
 # (si vous utilisez Cloud Functions)
 functions/node_modules/
