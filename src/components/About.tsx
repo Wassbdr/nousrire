@@ -60,7 +60,7 @@ const About = () => {
               Notre Mission
             </h3>
             <p className="text-brand-pink-600 text-center text-lg leading-relaxed">
-              Nous nous engageons à lutter contre la précarité alimentaire en distribuant des repas
+              Nous  engageons à lutter contre la précarité alimentaire en distribuant des repas
               aux personnes dans le besoin, tout en créant des moments de partage et de convivialité.
             </p>
           </motion.div>
