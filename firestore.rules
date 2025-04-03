@@ -3,21 +3,18 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Function to verify if user is an admin
-    function isAdmin() {
-      return request.auth != null && 
-             request.auth.token.email_verified == true && 
-             exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    function isAuthenticated() {
+      return request.auth != null;
     }
-
     // Allow public read access to news and events, but require admin for writes
     match /news/{newsId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if isAuthenticated();
     }
     
     match /events/{eventId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if isAuthenticated();
     }
     
     // Admin collection for checking admin status

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { NewsFormData, EventFormData } from '../types';
 import DOMPurify from 'dompurify';
 
@@ -6,8 +6,8 @@ interface AdminFormProps {
   type: 'news' | 'events';
   onClose: () => void;
   onSubmit: (data: NewsFormData | EventFormData) => void;
-  initialData?: NewsFormData | EventFormData; // Add this prop for editing
-  isEditing?: boolean; // Add this prop to indicate edit mode
+  initialData?: NewsFormData | EventFormData;
+  isEditing?: boolean;
 }
 
 const AdminForm: React.FC<AdminFormProps> = ({ 
@@ -17,7 +17,6 @@ const AdminForm: React.FC<AdminFormProps> = ({
   initialData,
   isEditing = false
 }) => {
-  // Initialize form with initialData if provided
   const [title, setTitle] = useState(
     initialData && 'title' in initialData ? initialData.title : ''
   );
@@ -35,11 +34,13 @@ const AdminForm: React.FC<AdminFormProps> = ({
     initialData && 'location' in initialData ? initialData.location : ''
   );
 
-  // Add client-side date validation
+  const [isDragging, setIsDragging] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [dateError, setDateError] = useState('');
   const [error, setError] = useState('');
 
-  // Update the date change handler
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = new Date(e.target.value);
     const today = new Date();
@@ -54,10 +55,66 @@ const AdminForm: React.FC<AdminFormProps> = ({
     setDate(e.target.value);
   };
 
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      handleImageChange(file);
+    }
+  };
+
+  const handleImageChange = (file: File | null) => {
+    if (file && file.type.startsWith('image/')) {
+      setImage(file);
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else if (file) {
+      setError('Veuillez sélectionner un fichier image valide');
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleImageChange(e.target.files[0]);
+    }
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Trim and validate title
     const trimmedTitle = title.trim();
     if (!trimmedTitle || trimmedTitle.length < 3) {
       setError('Le titre doit contenir au moins 3 caractères');
@@ -65,26 +122,23 @@ const AdminForm: React.FC<AdminFormProps> = ({
     }
     
     if (type === 'news') {
-      // Validate content
       const trimmedContent = content.trim();
       if (!trimmedContent || trimmedContent.length < 10) {
         setError('Le contenu doit contenir au moins 10 caractères');
         return;
       }
       
-      // Validate image if provided
       if (image && !['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(image.type)) {
         setError('Format d\'image non supporté. Utilisez JPG, PNG, GIF ou WebP.');
         return;
       }
       
-      if (image && image.size > 5 * 1024 * 1024) { // 5MB limit
+      if (image && image.size > 5 * 1024 * 1024) {
         setError('L\'image ne doit pas dépasser 5MB.');
         return;
       }
       
       const newsData: NewsFormData = {
-        // Sanitize inputs
         title: DOMPurify.sanitize(trimmedTitle),
         content: DOMPurify.sanitize(trimmedContent),
         image
@@ -92,7 +146,6 @@ const AdminForm: React.FC<AdminFormProps> = ({
       
       onSubmit(newsData);
     } else if (type === 'events') {
-      // Add validation for events
       const eventDate = new Date(date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -152,13 +205,64 @@ const AdminForm: React.FC<AdminFormProps> = ({
               
               <div className="mb-4">
                 <label className="block mb-1 font-medium text-brand-pink-600">Image</label>
+                <div
+                  className={`border-2 border-dashed rounded-md p-4 text-center cursor-pointer ${
+                    isDragging ? 'border-brand-pink-500 bg-brand-pink-50' : 'border-gray-300'
+                  }`}
+                  onDragEnter={handleDragEnter}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={triggerFileInput}
+                >
+                  {previewUrl ? (
+                    <div className="relative">
+                      <img 
+                        src={previewUrl} 
+                        alt="Aperçu" 
+                        className="max-h-48 mx-auto rounded" 
+                      />
+                      <p className="mt-2 text-sm text-gray-600">
+                        {image?.name} ({Math.round(image?.size! / 1024)} KB)
+                      </p>
+                      <button
+                        type="button"
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setImage(null);
+                          setPreviewUrl(null);
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <p className="mt-2 text-sm text-gray-600">
+                        Glissez et déposez une image ici, ou cliquez pour sélectionner
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        PNG, JPG, GIF ou WEBP jusqu'à 5MB
+                      </p>
+                    </>
+                  )}
+                </div>
+                
                 <input
                   type="file"
-                  accept="image/*"
-                  onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-                  className="w-full"
+                  ref={fileInputRef}
+                  onChange={handleFileInputChange}
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  className="hidden"
                 />
-                {isEditing && !image && (
+                
+                {isEditing && !image && !previewUrl && (
                   <p className="text-sm text-gray-500 mt-1">
                     Laissez vide pour conserver l'image existante
                   </p>
@@ -176,7 +280,7 @@ const AdminForm: React.FC<AdminFormProps> = ({
                   value={date}
                   onChange={handleDateChange}
                   className={`w-full px-3 py-2 border rounded-md ${dateError ? 'border-red-500' : ''}`}
-                  min={new Date().toISOString().split('T')[0]} // This prevents selecting past dates in the date picker
+                  min={new Date().toISOString().split('T')[0]}
                   required
                 />
                 {dateError && (
