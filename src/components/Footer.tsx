@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
 import { 
-  EnvelopeIcon, 
-  // PhoneIcon, 
-  // MapPinIcon 
+  EnvelopeIcon
 } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const containerVariants = {
@@ -29,15 +28,13 @@ const Footer = () => {
 
   const links = {
     association: [
-      { label: 'Notre Mission', href: '/mission' },
-      { label: 'Nos Actions', href: '/actions' },
-      { label: 'Devenir Bénévole', href: '/volunteer' },
-      { label: 'Faire un Don', href: '/donate' },
+      { label: 'Notre Mission', href: 'mission' },
+      { label: 'Nos Actions', href: 'actions' },
+      { label: 'Devenir Bénévole', href: 'benevole' },
+      { label: 'Faire un Don', href: 'don' },
     ],
     contact: [
       { label: 'nousrire.contact@gmail.com', href: 'mailto:nousrire.contact@gmail.com', icon: EnvelopeIcon },
-      // { label: '01 23 45 67 89', href: 'tel:0123456789', icon: PhoneIcon },
-      // { label: '123 Rue de la Distribution, Paris', href: 'https://maps.google.com', icon: MapPinIcon },
     ],
     social: [
       { 
@@ -61,6 +58,14 @@ const Footer = () => {
     ],
   };
 
+  // Fonction personnalisée pour faire défiler vers la section sans changer l'URL
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-brand-pink-50">
       <motion.div
@@ -73,13 +78,13 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-12">
           {/* Logo et Description */}
           <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
-            <a href="/" className="block mb-6">
+            <Link to="/" className="block mb-6">
               <img
                 src="/images/maraude_logo.svg"
                 alt="Maraude 92 Logo"
                 className="h-12 w-auto"
               />
-            </a>
+            </Link>
             <p className="text-brand-pink-700/80">
               Association de distribution alimentaire engagée dans la lutte contre la précarité.
             </p>
@@ -93,12 +98,12 @@ const Footer = () => {
             <ul className="space-y-4">
               {links.association.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-brand-pink-600 hover:text-brand-pink-500 transition-colors"
+                  <button
+                    onClick={() => scrollToSection(link.href)}
+                    className="text-brand-pink-600 hover:text-brand-pink-500 transition-colors bg-transparent border-none p-0 cursor-pointer text-left"
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -158,4 +163,4 @@ const Footer = () => {
   );
 };
 
-export default Footer; 
+export default Footer;
