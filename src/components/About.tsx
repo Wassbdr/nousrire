@@ -37,7 +37,7 @@ const About = () => {
             Notre Mission
           </h2>
           <p className="text-xl text-brand-pink-600 max-w-3xl mx-auto">
-            ne association dédiée à la solidarité et au partage, œuvrant pour un monde plus juste et plus humain
+            Une association dédiée à la solidarité et au partage, œuvrant pour un monde plus juste et plus humain
           </p>
         </motion.div>
 
