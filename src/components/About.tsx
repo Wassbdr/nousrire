@@ -24,7 +24,7 @@ const About = () => {
   };
 
   return (
-    <div className="relative py-24 bg-gradient-to-b from-brand-cream-50 via-brand-cream-100 to-white">
+    <div className="relative py-24 bg-gradient-to-b from-brand-cream via-brand-cream-100 to-white">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <motion.div 
           className="text-center mb-16"
@@ -121,12 +121,17 @@ const About = () => {
                   des moments de partage et de convivialité.
                 </p>
               </div>
-              <div className="relative h-64 md:h-full rounded-xl overflow-hidden">
-                <img
-                  src="https://static.actu.fr/uploads/2022/02/25432-220201101007218-0.jpg"
-                  alt="Benévoles de l'association"
-                  className="w-full h-full object-cover"
-                />
+              
+              {/* Image avec meilleure gestion */}
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <div className="aspect-w-4 aspect-h-3">
+                  <img
+                    src="/images/benevoles.jpg"
+                    alt="Benévoles de l'association"
+                    className="w-full h-full object-cover object-center"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -136,4 +141,4 @@ const About = () => {
   );
 };
 
-export default About; 
+export default About;

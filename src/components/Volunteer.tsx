@@ -1,5 +1,15 @@
 import { motion } from 'framer-motion';
-import { CalendarIcon, ClockIcon, MapPinIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { 
+  CalendarIcon, 
+  ClockIcon, 
+  MapPinIcon, 
+  HeartIcon,
+  UserIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  PaperAirplaneIcon,
+  ChatBubbleBottomCenterTextIcon
+} from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { sendVolunteerEmail } from '../services/emailService';
@@ -47,37 +57,49 @@ const Volunteer = () => {
     },
   };
 
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    phone: false
+  });
+
+  const getFieldError = (field: 'name' | 'email' | 'phone') => {
+    if (!touched[field]) return null;
+    
+    switch (field) {
+      case 'name':
+        return formData.name.trim().length < 3 ? 'Le nom doit contenir au moins 3 caractères' : null;
+      case 'email':
+        return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? 'Email invalide' : null;
+      case 'phone':
+        return !/^(\+\d{1,3})?\d{9,10}$/.test(formData.phone.replace(/\s/g, '')) ? 'Numéro de téléphone invalide' : null;
+      default:
+        return null;
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlur = (field: 'name' | 'email' | 'phone') => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    setTouched({ name: true, email: true, phone: true });
+    
+    if (getFieldError('name') || getFieldError('email') || getFieldError('phone')) {
+      setSubmitStatus('error');
+      setError('Veuillez corriger les erreurs dans le formulaire');
+      return;
+    }
+    
     setIsSubmitting(true);
     
-    // Basic validation
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      setSubmitStatus('error');
-      setError('Tous les champs sont obligatoires');
-      setIsSubmitting(false);
-      return;
-    }
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setSubmitStatus('error');
-      setError('Veuillez entrer une adresse email valide');
-      setIsSubmitting(false);
-      return;
-    }
-    
-    // Phone validation
-    const phoneRegex = /^(\+\d{1,3})?\d{9,10}$/;
-    if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-      setSubmitStatus('error');
-      setError('Veuillez entrer un numéro de téléphone valide');
-      setIsSubmitting(false);
-      return;
-    }
-    
-    // Sanitize data before sending
     const sanitizedData = {
       name: DOMPurify.sanitize(formData.name.trim()),
       email: DOMPurify.sanitize(formData.email.trim()),
@@ -91,6 +113,7 @@ const Volunteer = () => {
       setSubmitStatus(success ? 'success' : 'error');
       if (success) {
         setFormData({ name: '', email: '', phone: '', message: '', distribution: selectedDistribution?.id || '' });
+        setTouched({ name: false, email: false, phone: false });
       }
     } catch (error) {
       setSubmitStatus('error');
@@ -100,14 +123,9 @@ const Volunteer = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-fade from-white via-brand-cream-50 to-brand-cream-100" />
+    <section id="benevole" className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-brand-cream-50 to-brand-cream-100" />
       
       <div className="relative py-24">
         <motion.div
@@ -131,7 +149,7 @@ const Volunteer = () => {
           {selectedDistribution && (
             <motion.div
               variants={itemVariants}
-              className="bg-white rounded-2xl shadow-lg p-8 mb-12 max-w-2xl mx-auto"
+              className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8 mb-12 max-w-2xl mx-auto"
             >
               <h3 className="text-2xl font-semibold text-brand-pink-700 mb-6">
                 Distribution sélectionnée
@@ -156,60 +174,95 @@ const Volunteer = () => {
           <motion.form
             variants={itemVariants}
             onSubmit={handleSubmit}
-            className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8"
+            className="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-8"
           >
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label htmlFor="name" className="block text-brand-pink-700 font-medium mb-2">
+                <label htmlFor="name" className="block text-brand-pink-700 font-medium mb-2 flex items-center">
+                  <UserIcon className="h-4 w-4 mr-2" />
                   Nom complet
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-brand-pink-200 focus:border-brand-pink-500 
-                    focus:ring-2 focus:ring-brand-pink-200 outline-none transition-colors duration-300"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('name')}
+                    required
+                    placeholder="Votre nom complet"
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      touched.name && getFieldError('name') 
+                        ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                        : 'border-brand-pink-200 focus:border-brand-pink-500 focus:ring-brand-pink-200'
+                    } outline-none transition-all duration-300 bg-white/80`}
+                  />
+                  {touched.name && getFieldError('name') && (
+                    <p className="text-red-500 text-sm mt-1">{getFieldError('name')}</p>
+                  )}
+                </div>
               </div>
+              
               <div>
-                <label htmlFor="email" className="block text-brand-pink-700 font-medium mb-2">
+                <label htmlFor="email" className="block text-brand-pink-700 font-medium mb-2 flex items-center">
+                  <EnvelopeIcon className="h-4 w-4 mr-2" />
                   Email
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-brand-pink-200 focus:border-brand-pink-500 
-                    focus:ring-2 focus:ring-brand-pink-200 outline-none transition-colors duration-300"
-                />
+                <div className="relative">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('email')}
+                    required
+                    placeholder="votre.email@exemple.com"
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      touched.email && getFieldError('email') 
+                        ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                        : 'border-brand-pink-200 focus:border-brand-pink-500 focus:ring-brand-pink-200'
+                    } outline-none transition-all duration-300 bg-white/80`}
+                  />
+                  {touched.email && getFieldError('email') && (
+                    <p className="text-red-500 text-sm mt-1">{getFieldError('email')}</p>
+                  )}
+                </div>
               </div>
             </div>
 
             <div className="mb-6">
-              <label htmlFor="phone" className="block text-brand-pink-700 font-medium mb-2">
+              <label htmlFor="phone" className="block text-brand-pink-700 font-medium mb-2 flex items-center">
+                <PhoneIcon className="h-4 w-4 mr-2" />
                 Téléphone
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 rounded-lg border border-brand-pink-200 focus:border-brand-pink-500 
-                  focus:ring-2 focus:ring-brand-pink-200 outline-none transition-colors duration-300"
-              />
+              <div className="relative">
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('phone')}
+                  required
+                  placeholder="06 12 34 56 78"
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    touched.phone && getFieldError('phone') 
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                      : 'border-brand-pink-200 focus:border-brand-pink-500 focus:ring-brand-pink-200'
+                  } outline-none transition-all duration-300 bg-white/80`}
+                />
+                {touched.phone && getFieldError('phone') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('phone')}</p>
+                )}
+              </div>
             </div>
 
             <div className="mb-8">
-              <label htmlFor="message" className="block text-brand-pink-700 font-medium mb-2">
-                Message
+              <label htmlFor="message" className="block text-brand-pink-700 font-medium mb-2 flex items-center">
+                <ChatBubbleBottomCenterTextIcon className="h-4 w-4 mr-2" />
+                Message <span className="text-sm text-brand-pink-400 ml-1">(optionnel)</span>
               </label>
               <textarea
                 id="message"
@@ -217,31 +270,80 @@ const Volunteer = () => {
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg border border-brand-pink-200 focus:border-brand-pink-500 
-                  focus:ring-2 focus:ring-brand-pink-200 outline-none transition-colors duration-300"
+                placeholder="Partagez vos motivations ou posez vos questions..."
+                className="w-full px-4 py-3 rounded-lg border border-brand-pink-200 focus:border-brand-pink-500 
+                  focus:ring-2 focus:ring-brand-pink-200 outline-none transition-colors duration-300 bg-white/80"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full bg-brand-pink-500 hover:bg-brand-pink-600 text-white py-3 px-8 
-                rounded-full font-medium transition-colors duration-300 transform hover:scale-105 
-                active:scale-95 focus:outline-none focus:ring-2 focus:ring-brand-pink-200 ${isSubmitting ? 'cursor-not-allowed' : ''}`}
-            >
-              {isSubmitting ? 'Envoi en cours...' : 'Envoyer'}
-            </button>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData({ name: '', email: '', phone: '', message: '', distribution: formData.distribution });
+                  setTouched({ name: false, email: false, phone: false });
+                  setSubmitStatus('idle');
+                }}
+                className="px-6 py-3 border border-brand-pink-300 text-brand-pink-600 rounded-full font-medium 
+                  transition-all duration-300 hover:bg-brand-pink-50 focus:outline-none focus:ring-2 focus:ring-brand-pink-200"
+              >
+                Effacer
+              </button>
+              
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`flex-1 flex justify-center items-center gap-2 bg-brand-pink-500 hover:bg-brand-pink-600 text-white py-3 px-8 
+                  rounded-full font-medium transition-all duration-300 transform hover:scale-[1.02] 
+                  active:scale-95 focus:outline-none focus:ring-2 focus:ring-brand-pink-200 ${isSubmitting ? 'cursor-not-allowed opacity-80' : ''}`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Envoi en cours...</span>
+                  </>
+                ) : (
+                  <>
+                    <PaperAirplaneIcon className="h-5 w-5" />
+                    <span>Envoyer ma candidature</span>
+                  </>
+                )}
+              </button>
+            </div>
 
             {submitStatus === 'success' && (
-              <div className="p-4 bg-green-50 text-green-700 rounded-lg">
-                Votre message a été envoyé avec succès ! Vous recevrez un email de confirmation.
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }} 
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 mt-6 bg-green-50 border border-green-100 text-green-700 rounded-lg flex items-start"
+              >
+                <svg className="w-5 h-5 mr-3 mt-0.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <p className="font-medium">Votre candidature a été envoyée avec succès !</p>
+                  <p className="text-sm mt-1">Nous vous contacterons prochainement pour confirmer votre participation.</p>
+                </div>
+              </motion.div>
             )}
 
             {submitStatus === 'error' && (
-              <div className="p-4 bg-red-50 text-red-700 rounded-lg">
-                {error || "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer."}
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }} 
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 mt-6 bg-red-50 border border-red-100 text-red-700 rounded-lg flex items-start"
+              >
+                <svg className="w-5 h-5 mr-3 mt-0.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <p className="font-medium">Une erreur est survenue</p>
+                  <p className="text-sm mt-1">{error || "Veuillez vérifier vos informations et réessayer."}</p>
+                </div>
+              </motion.div>
             )}
           </motion.form>
         </motion.div>
