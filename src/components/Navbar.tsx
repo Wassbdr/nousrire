@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// Clear navigation component that handles scrolling to page sections
 const Navbar = () => {
+  // State management for mobile menu, scroll position and active section
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('accueil');
@@ -9,7 +11,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
       
-      // Détection de la section active
+      // Detect active section based on scroll position
       const sections = document.querySelectorAll('section[id]');
       const scrollY = window.pageYOffset;
       
@@ -29,6 +31,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Smooth scroll to section and close mobile menu
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -143,4 +146,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

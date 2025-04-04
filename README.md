@@ -1,27 +1,80 @@
 # Maraude 92 - Site Web de l'Association
 
-Ce projet est le site web de l'association Maraude 92, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité.
+![Maraude 92](/public/images/maraude_logo.svg)
 
-## Technologies Utilisées
+Ce projet est le site web officiel de l'association Maraude 92, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité dans le département des Hauts-de-Seine (92).
 
-- React 18
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- React Router
-- Heroicons
+## 📋 Table des matières
+- [Aperçu](#aperçu)
+- [Technologies utilisées](#technologies-utilisées)
+- [Fonctionnalités](#fonctionnalités)
+- [Architecture](#architecture)
+- [Installation](#installation)
+- [Configuration Firebase](#configuration-firebase)
+- [Déploiement](#déploiement)
+- [Développement](#développement)
+- [Contribution](#contribution)
+- [Contact](#contact)
 
-## Fonctionnalités
+## 🌟 Aperçu
 
+Maraude 92 est une plateforme web qui permet à l'association de présenter ses activités, partager des actualités, planifier des événements et faciliter l'engagement des bénévoles et donateurs potentiels.
+
+## 🛠️ Technologies utilisées
+
+### Frontend
+- **React 18** - Bibliothèque UI
+- **TypeScript** - Typage statique
+- **Tailwind CSS** - Framework CSS utilitaire
+- **Framer Motion** - Animations fluides
+- **React Router** - Gestion des routes
+- **React PayPal JS** - Intégration des paiements
+
+### Backend & Services
+- **Firebase**
+  - Firestore - Base de données NoSQL
+  - Authentication - Gestion des utilisateurs
+  - Storage - Stockage des images et fichiers
+  - Hosting - Hébergement du site
+- **EmailJS** - Envoi d'emails depuis le frontend
+- **GitHub Actions** - CI/CD
+
+## 💡 Fonctionnalités
+
+### Publiques
 - Page d'accueil avec présentation de l'association
 - Section "Notre Mission" détaillant les objectifs
 - Section "Nos Actions" présentant les activités
+- Actualités et événements dynamiques
 - Calendrier des distributions alimentaires
 - Formulaire d'inscription pour les bénévoles
-- Système de dons en ligne
+- Système de dons en ligne via PayPal
 - Design responsive et animations fluides
 
-## Installation
+### Administration
+- Interface d'administration sécurisée
+- Gestion des actualités (création, modification, suppression)
+- Gestion des événements et du calendrier
+- Upload d'images avec compression automatique
+
+## 🏗️ Architecture
+
+```
+src/
+  ├── components/     # Composants React réutilisables
+  ├── config/         # Configuration (Firebase, etc.)
+  ├── context/        # Contextes React (Auth, etc.)
+  ├── hooks/          # Hooks personnalisés
+  ├── pages/          # Pages principales de l'application
+  ├── services/       # Services (Firestore, Email, etc.)
+  ├── styles/         # Styles globaux et variables
+  ├── types/          # Définitions de types TypeScript
+  ├── utils/          # Fonctions utilitaires
+  ├── App.tsx         # Composant principal
+  └── index.tsx       # Point d'entrée
+```
+
+## ⚙️ Installation
 
 1. Clonez le dépôt :
 ```bash
@@ -34,58 +87,70 @@ cd nourir
 npm install
 ```
 
-3. Lancez le serveur de développement :
+3. Créez un fichier `.env` à la racine du projet en utilisant le modèle `.env.example` :
+```bash
+cp .env.example .env
+```
+Et complétez avec vos informations Firebase et EmailJS.
+
+4. Lancez le serveur de développement :
 ```bash
 npm start
 ```
 
 Le site sera accessible à l'adresse [http://localhost:3000](http://localhost:3000).
 
-## Structure du Projet
+## 🔥 Configuration Firebase
 
+Ce projet utilise Firebase pour plusieurs fonctionnalités :
+
+1. **Firestore** : Stockage des données (actualités, événements)
+2. **Authentication** : Authentification des administrateurs
+3. **Storage** : Stockage des images
+4. **Hosting** : Déploiement de l'application
+
+Les règles de sécurité pour Firestore et Storage sont définies dans `firestore.rules` et `storage.rules` respectivement.
+
+## 🚀 Déploiement
+
+Le déploiement se fait automatiquement via GitHub Actions lorsqu'un push est effectué sur la branche `main`.
+
+Pour un déploiement manuel :
+```bash
+npm run build
+firebase deploy
 ```
-src/
-  ├── components/     # Composants React
-  ├── assets/        # Images et ressources
-  ├── styles/        # Fichiers CSS
-  ├── App.tsx        # Composant principal
-  └── index.tsx      # Point d'entrée
-```
 
-## Composants Principaux
+## 💻 Développement
 
-- `Navbar` : Navigation principale
-- `Hero` : Section d'en-tête avec présentation
-- `Mission` : Présentation de la mission
-- `Actions` : Liste des actions menées
-- `Schedule` : Calendrier des distributions
-- `Volunteer` : Formulaire pour devenir bénévole
-- `Donate` : Système de dons
-- `Footer` : Pied de page avec informations de contact
+### Scripts disponibles
 
-## Styles
+- `npm start` : Lance le serveur de développement
+- `npm run build` : Crée une version optimisée pour la production
+- `npm test` : Lance les tests
+- `npm run eject` : Éjecte la configuration (⚠️ opération irréversible)
 
-Le projet utilise Tailwind CSS pour le styling avec une configuration personnalisée :
+### Monitoring et performances
 
-- Palette de couleurs personnalisée (rose et crème)
-- Animations fluides avec Framer Motion
-- Design responsive
-- Composants réutilisables
+Le projet inclut des outils de monitoring pour suivre l'utilisation des services Firebase :
+- Nombre de documents dans les collections
+- Utilisation du stockage
+- Statistiques d'accès
 
-## Contribution
+## 👥 Contribution
 
 Les contributions sont les bienvenues ! Pour contribuer :
 
 1. Forkez le projet
-2. Créez une branche pour votre fonctionnalité
-3. Committez vos changements
-4. Poussez vers la branche
+2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/nouvelle-fonctionnalite`)
+3. Committez vos changements (`git commit -m 'Ajout de nouvelle-fonctionnalite'`)
+4. Poussez vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
 5. Ouvrez une Pull Request
 
-## Licence
+## 📞 Contact
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+Pour toute question ou suggestion concernant ce projet, contactez-nous à [nousrire.contact@gmail.com](mailto:nousrire.contact@gmail.com)
 
-## Contact
+---
 
-Pour toute question ou suggestion, contactez-nous à contact@nourir.org
+Développé avec ❤️ pour Maraude 92

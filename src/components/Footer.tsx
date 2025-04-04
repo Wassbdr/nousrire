@@ -5,6 +5,7 @@ import {
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  // Animation variants for staggered appearance
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -13,6 +14,14 @@ const Footer = () => {
         staggerChildren: 0.1,
       },
     },
+  };
+
+  // Smooth scroll function for navigation links
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const itemVariants = {
@@ -58,14 +67,6 @@ const Footer = () => {
     ],
   };
 
-  // Fonction personnalisée pour faire défiler vers la section sans changer l'URL
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <footer className="bg-brand-pink-50">
       <motion.div
@@ -76,7 +77,7 @@ const Footer = () => {
         className="container mx-auto px-4 py-16"
       >
         <div className="grid md:grid-cols-4 gap-12">
-          {/* Logo et Description */}
+          {/* Logo and Description */}
           <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
             <Link to="/" className="block mb-6">
               <img
@@ -90,7 +91,7 @@ const Footer = () => {
             </p>
           </motion.div>
 
-          {/* Liens de l'Association */}
+          {/* Association Links */}
           <motion.div variants={itemVariants}>
             <h3 className="text-lg font-semibold text-brand-pink-700 mb-6">
               L'Association
@@ -129,7 +130,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* Réseaux Sociaux */}
+          {/* Social Media */}
           <motion.div variants={itemVariants}>
             <h3 className="text-lg font-semibold text-brand-pink-700 mb-6">
               Suivez-nous

@@ -82,7 +82,7 @@ const About = () => {
             </p>
           </motion.div>
 
-          {/* Valeurs */}
+          {/* Values */}
           <motion.div 
             className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
             variants={itemVariants}
@@ -100,7 +100,7 @@ const About = () => {
           </motion.div>
         </motion.div>
 
-        {/* Histoire */}
+        {/* Story Section */}
         <motion.div 
           className="mt-20"
           initial={{ opacity: 0, y: 20 }}

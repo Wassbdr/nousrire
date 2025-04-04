@@ -21,14 +21,14 @@ const Admin = () => {
     date: ''
   });
 
-  // Générer les heures de 8h à 22h
+  // Generate time slots from 8:00 to 22:00
   const hours = Array.from({ length: 15 }, (_, i) => {
     const hour = i + 8;
     return `${hour.toString().padStart(2, '0')}:00`;
   });
 
   useEffect(() => {
-    // Charger les distributions depuis le localStorage
+    // Load saved distributions from localStorage
     const savedDistributions = localStorage.getItem('distributions');
     if (savedDistributions) {
       setDistributions(JSON.parse(savedDistributions));
@@ -59,12 +59,14 @@ const Admin = () => {
     });
   };
 
+  // Remove a distribution and update localStorage
   const handleDelete = (id: string) => {
     const updatedDistributions = distributions.filter(dist => dist.id !== id);
     setDistributions(updatedDistributions);
     localStorage.setItem('distributions', JSON.stringify(updatedDistributions));
   };
 
+  // Format date to French locale with day of week, month and day
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('fr-FR', {
@@ -85,7 +87,6 @@ const Admin = () => {
         >
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Administration du Calendrier</h1>
 
-          {/* Formulaire d'ajout */}
           <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg mb-8">
             <h2 className="text-xl font-semibold mb-4">Ajouter une Distribution</h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -150,7 +151,6 @@ const Admin = () => {
             </button>
           </form>
 
-          {/* Liste des distributions */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Distributions Planifiées</h2>
             <div className="space-y-4">
@@ -186,4 +186,4 @@ const Admin = () => {
   );
 };
 
-export default Admin; 
+export default Admin;

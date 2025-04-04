@@ -5,10 +5,11 @@ interface AdminRouteProps {
   children: React.ReactNode;
 }
 
+// Protected route component that requires authentication
 const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   
-  // Show loading indication while authentication state is being determined
+  // Display loading spinner while checking authentication
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -17,12 +18,11 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     );
   }
 
-  // Redirect to login if not authenticated
+  // Redirect unauthenticated users to login page
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // Render children if authenticated
   return <>{children}</>;
 };
 

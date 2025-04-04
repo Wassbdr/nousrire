@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getNews } from '../services/firestoreService';
-import { NewsItem } from '../types';  // Import the shared type
+import { NewsItem } from '../types'; 
 
 const News = () => {
   const [news, setNews] = useState<NewsItem[]>([]);

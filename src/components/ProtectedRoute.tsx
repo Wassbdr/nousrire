@@ -10,7 +10,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const location = useLocation();
 
   if (!isAuthenticated) {
-    // Rediriger vers la page de connexion avec l'URL de retour
+    // Redirect to login page if not authenticated
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

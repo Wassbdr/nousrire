@@ -208,20 +208,19 @@ export const updateEvent = async (id: string, eventData: EventFormData): Promise
   }
 };
 
-// Other functions remain the same
 export const deleteNews = async (id: string): Promise<void> => {
   try {
-    // Récupérer l'actualité pour avoir l'URL de l'image
+    // Retrieve the news document to get the image URL
     const newsDoc = await getDoc(doc(db, 'news', id));
     const newsData = newsDoc.data();
     
-    // Supprimer l'actualité de Firestore
+    // Delete the news document
     await deleteDoc(doc(db, 'news', id));
     
-    // Si l'actualité a une image, la supprimer du Storage
+    // If the news had an image, delete it from storage
     if (newsData && newsData.image) {
       try {
-        // Extraire le chemin du fichier de l'URL
+        // Extract the image path from the URL
         const imageUrl = newsData.image;
         const storageRef = ref(storage, imageUrl);
         await deleteObject(storageRef);

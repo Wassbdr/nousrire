@@ -6,7 +6,7 @@ const PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || '';
 
 export const sendVolunteerEmail = async (formData: any) => {
   try {
-    // Email au bénévole
+    // Mail to the user
     await emailjs.send(
       SERVICE_ID,
       TEMPLATE_ID,
@@ -19,7 +19,7 @@ export const sendVolunteerEmail = async (formData: any) => {
       PUBLIC_KEY
     );
 
-    // Email à l'admin
+    // Mail to the admin
     await emailjs.send(
       SERVICE_ID,
       TEMPLATE_ID,

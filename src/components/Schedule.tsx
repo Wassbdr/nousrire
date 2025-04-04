@@ -17,6 +17,7 @@ const Schedule = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Load and filter distributions to show only future events
     const savedDistributions = localStorage.getItem('distributions');
     if (savedDistributions) {
       const allDistributions = JSON.parse(savedDistributions);
@@ -29,6 +30,7 @@ const Schedule = () => {
     }
   }, []);
 
+  // Format date to French locale with day of week, month and day
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'long',
@@ -161,4 +163,4 @@ const Schedule = () => {
   );
 };
 
-export default Schedule; 
+export default Schedule;

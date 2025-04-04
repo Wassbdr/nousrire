@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'; // Ajouter useRef
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 interface Stat {
@@ -8,6 +8,7 @@ interface Stat {
 }
 
 const Hero = () => {
+  // Animation variants for container elements with staggered children
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -18,6 +19,7 @@ const Hero = () => {
     },
   };
 
+  // Animation variants for individual items
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -35,7 +37,7 @@ const Hero = () => {
     { value: "30+", label: "Partenaires" },
   ];
 
-  // Utiliser useMemo pour mémoriser le tableau d'images
+  // Memoized array of carousel images to prevent unnecessary re-renders
   const images = useMemo(() => [
     {
       src: "/images/distribution.png",
@@ -49,21 +51,19 @@ const Hero = () => {
       src: "/images/social.png",
       alt: "Moment social avec les bénéficiaires"
     }
-  ], []); // Tableau de dépendances vide car les images sont statiques
+  ], []);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Référence pour suivre l'intervalle actuel
+  // Reference to track and manage the carousel interval
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fonction pour réinitialiser le timer
+  // Reset the carousel timer to prevent immediate image change after manual navigation
   const resetTimer = useCallback(() => {
-    // Effacer l'intervalle existant
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
-    // Créer un nouvel intervalle
     intervalRef.current = setInterval(() => {
       setCurrentImageIndex(prevIndex => 
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -71,7 +71,7 @@ const Hero = () => {
     }, 5000);
   }, [images.length]);
 
-  // Navigation manuelle avec réinitialisation du timer
+  // Manual carousel navigation with timer reset
   const goToNextImage = useCallback(() => {
     setCurrentImageIndex(prevIndex => 
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -91,11 +91,11 @@ const Hero = () => {
     resetTimer();
   }, [resetTimer]);
 
-  // Initialisation du timer au chargement du composant
+  // Initialize carousel timer on component mount
   useEffect(() => {
     resetTimer();
 
-    // Nettoyage lors du démontage
+    // Cleanup interval on component unmount
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -103,7 +103,7 @@ const Hero = () => {
     };
   }, [resetTimer]);
 
-  // Préchargement des images pour des transitions plus fluides
+  // Preload images for smoother transitions
   useEffect(() => {
     images.forEach(image => {
       const img = new Image();
@@ -116,7 +116,7 @@ const Hero = () => {
       id="accueil" 
       className="relative bg-gradient-to-b from-white via-brand-cream-100 to-brand-cream overflow-hidden pt-20 pb-12"
     >
-      {/* Logo en arrière-plan */}
+      {/* Background logo with reduced opacity */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10">
         <img 
           src="/images/maraude_bg.png" 
@@ -191,7 +191,7 @@ const Hero = () => {
                 </motion.div>
               ))}
               
-              {/* Boutons de navigation */}
+              {/* Navigation buttons for carousel */}
               <div className="absolute inset-0 flex items-center justify-between p-4 z-10">
                 <button 
                   onClick={(e) => {
@@ -216,7 +216,7 @@ const Hero = () => {
               </div>
             </div>
             
-            {/* Indicateurs avec transition plus douce */}
+            {/* Indicator dots for current slide */}
             <div className="flex justify-center mt-4 space-x-2">
               {images.map((_, index) => (
                 <button
