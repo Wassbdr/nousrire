@@ -96,8 +96,8 @@ const About = () => {
               <div className="rounded-xl overflow-hidden shadow-md">
                 <div className="aspect-w-4 aspect-h-3">
                   <OptimizedImage 
-                    src="https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/distribution.webp?alt=media&token=..."
-                    imageName="distribution.webp" 
+                    src="images/optimized/benevoles.webp"
+                    imageName="benevoles.webp" 
                     alt="Description"
                     width={800}
                     height={600}
