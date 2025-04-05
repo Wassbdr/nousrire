@@ -40,20 +40,21 @@ const Hero = () => {
   // Memoized array of carousel images to prevent unnecessary re-renders
   const images = useMemo(() => [
     {
-      src: "/images/distribution.png",
+      src: "https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/distribution.webp?alt=media&token=bb431afe-2bed-47dd-aed3-334e9ecd07ce",
       alt: "Distribution alimentaire"
     },
     {
-      src: "/images/action.png", 
+      src: "https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/action.webp?alt=media&token=2580e2a8-dcf0-401d-ae26-cfa045d29f33", 
       alt: "Nos bénévoles en action"
     },
     {
-      src: "/images/social.png",
+      src: "https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/social.webp?alt=media&token=d6de1ea5-9c8c-48c1-a19b-cd3c5ba7bdb6",
       alt: "Moment social avec les bénéficiaires"
     }
   ], []);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState<boolean[]>(new Array(images.length).fill(false));
 
   // Reference to track and manage the carousel interval
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -91,6 +92,14 @@ const Hero = () => {
     resetTimer();
   }, [resetTimer]);
 
+  const handleImageLoaded = (index: number) => {
+    setImageLoaded(prev => {
+      const updated = [...prev];
+      updated[index] = true;
+      return updated;
+    });
+  };
+
   // Initialize carousel timer on component mount
   useEffect(() => {
     resetTimer();
@@ -119,7 +128,7 @@ const Hero = () => {
       {/* Background logo with reduced opacity */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10">
         <img 
-          src="/images/maraude_bg.png" 
+          src="https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/maraude_bg.webp?alt=media&token=10584ecd-d012-45eb-951e-1d33ccf105b6" 
           alt="Background Logo" 
           className="w-[120%] h-[120%] object-cover"
         />
@@ -183,11 +192,18 @@ const Hero = () => {
                   }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
                 >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="object-cover w-full h-full"
-                  />
+                  {/* Add loading state */}
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                    {imageLoaded[index] ? null : (
+                      <div className="animate-pulse text-brand-pink-500">Chargement...</div>
+                    )}
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className={`object-cover w-full h-full ${!imageLoaded[index] && 'opacity-0'}`}
+                      onLoad={() => handleImageLoaded(index)}
+                    />
+                  </div>
                 </motion.div>
               ))}
               

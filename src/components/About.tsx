@@ -1,37 +1,33 @@
 import { HeartIcon, LightBulbIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
+import { ReactNode } from 'react';
+
+// Define interface for CardItem props
+interface CardItemProps {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  delay: number;
+}
 
 const About = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
   return (
     <div className="relative py-24 bg-gradient-to-b from-brand-cream via-brand-cream-100 to-white">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
         <motion.div 
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ 
+            duration: 0.8, 
+            delay: 0.1,
+            type: "spring",
+            stiffness: 100,
+            damping: 20,
+            ease: [0.215, 0.610, 0.355, 1.000] // Cubic bezier for smooth entrance
+          }}
         >
           <h2 className="font-bayon text-4xl md:text-5xl text-brand-pink-700 mb-4">
             Notre Mission
@@ -41,72 +37,46 @@ const About = () => {
           </p>
         </motion.div>
 
-        <motion.div 
-          className="grid gap-12 md:grid-cols-2 lg:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {/* Mission */}
-          <motion.div 
-            className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-            variants={itemVariants}
-          >
-            <div className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-pink-500 text-white mx-auto mb-6 transform hover:scale-110 transition-transform duration-300">
-              <HeartIcon className="h-8 w-8" />
-            </div>
-            <h3 className="text-2xl font-bayon text-brand-pink-700 text-center mb-4">
-              Notre Mission
-            </h3>
-            <p className="text-brand-pink-600 text-center text-lg leading-relaxed">
-              Nous nous engageons à lutter contre la précarité alimentaire en distribuant des repas
-              aux personnes dans le besoin, tout en créant des moments de partage et de convivialité.
-            </p>
-          </motion.div>
+        {/* Cards Section */}
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+          {/* Mission Card */}
+          <CardItem 
+            icon={<HeartIcon className="h-8 w-8" />}
+            title="Notre Mission"
+            description="Nous nous engageons à lutter contre la précarité alimentaire en distribuant des repas aux personnes dans le besoin, tout en créant des moments de partage et de convivialité."
+            delay={0.2}
+          />
 
-          {/* Vision */}
-          <motion.div 
-            className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-            variants={itemVariants}
-          >
-            <div className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-pink-500 text-white mx-auto mb-6 transform hover:scale-110 transition-transform duration-300">
-              <LightBulbIcon className="h-8 w-8" />
-            </div>
-            <h3 className="text-2xl font-bayon text-brand-pink-700 text-center mb-4">
-              Notre Vision
-            </h3>
-            <p className="text-brand-pink-600 text-center text-lg leading-relaxed">
-              Créer un monde où personne ne doit avoir faim, où la solidarité et le partage sont
-              des valeurs fondamentales qui rassemblent notre communauté.
-            </p>
-          </motion.div>
+          {/* Vision Card */}
+          <CardItem 
+            icon={<LightBulbIcon className="h-8 w-8" />}
+            title="Notre Vision"
+            description="Créer un monde où personne ne doit avoir faim, où la solidarité et le partage sont des valeurs fondamentales qui rassemblent notre communauté."
+            delay={0.4}
+          />
 
-          {/* Values */}
-          <motion.div 
-            className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-            variants={itemVariants}
-          >
-            <div className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-pink-500 text-white mx-auto mb-6 transform hover:scale-110 transition-transform duration-300">
-              <SparklesIcon className="h-8 w-8" />
-            </div>
-            <h3 className="text-2xl font-bayon text-brand-pink-700 text-center mb-4">
-              Nos Valeurs
-            </h3>
-            <p className="text-brand-pink-600 text-center text-lg leading-relaxed">
-              Solidarité, respect, engagement et partage sont les piliers de notre action quotidienne,
-              guidant chaque initiative que nous entreprenons.
-            </p>
-          </motion.div>
-        </motion.div>
+          {/* Values Card */}
+          <CardItem 
+            icon={<SparklesIcon className="h-8 w-8" />}
+            title="Nos Valeurs"
+            description="Solidarité, respect, engagement et partage sont les piliers de notre action quotidienne, guidant chaque initiative que nous entreprenons."
+            delay={0.6}
+          />
+        </div>
 
         {/* Story Section */}
         <motion.div 
           className="mt-20"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ 
+            duration: 0.8, 
+            type: "tween",
+            stiffness: 100,
+            damping: 20,
+            delay: 0.2,
+          }}
         >
           <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-12 shadow-lg">
             <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -122,11 +92,10 @@ const About = () => {
                 </p>
               </div>
               
-              {/* Image avec meilleure gestion */}
               <div className="rounded-xl overflow-hidden shadow-md">
                 <div className="aspect-w-4 aspect-h-3">
                   <img
-                    src="/images/benevoles.jpg"
+                    src="https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/benevoles.webp?alt=media&token=93bc5d53-86e0-4d38-bbd5-7b454e86d910"
                     alt="Benévoles de l'association"
                     className="w-full h-full object-cover object-center"
                     loading="lazy"
@@ -138,6 +107,51 @@ const About = () => {
         </motion.div>
       </div>
     </div>
+  );
+};
+
+// Card component to avoid repetition
+const CardItem = ({ icon, title, description, delay }: CardItemProps) => {
+  return (
+    <motion.div 
+      className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+    >
+      <motion.div 
+        className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-pink-500 text-white mx-auto mb-6 transform hover:scale-110 transition-transform duration-300"
+        initial={{ scale: 0, rotate: -45 }}
+        whileInView={{ scale: 1, rotate: 0 }}
+        viewport={{ once: true }}
+        transition={{ 
+          duration: 0.5, 
+          delay: delay + 0.3,
+          type: "spring",
+          stiffness: 260,
+          damping: 20
+        }}
+      >
+        {icon}
+      </motion.div>
+      <motion.h3 
+        className="text-2xl font-bayon text-brand-pink-700 text-center mb-4"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: delay + 0.1 }}
+      >
+        {title}
+      </motion.h3>
+      <motion.p 
+        className="text-brand-pink-600 text-center text-lg leading-relaxed"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: delay + 0.2 }}
+      >
+        {description}
+      </motion.p>
+    </motion.div>
   );
 };
 

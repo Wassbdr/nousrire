@@ -36,20 +36,37 @@ const Contact = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        delayChildren: 0.1,
+        staggerChildren: 0.1,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        type: "tween", 
+        ease: "easeOut",
+        duration: 0.4,
       },
     },
+  };
+
+  const iconVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 260, 
+        damping: 20,
+        duration: 0.4 
+      } 
+    }
   };
 
   return (
@@ -61,7 +78,7 @@ const Contact = () => {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-50px" }}
           variants={containerVariants}
           className="container mx-auto px-4"
         >
@@ -80,19 +97,26 @@ const Contact = () => {
                 href={social.href || social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl 
-                  transform hover:-translate-y-1 transition-all duration-300"
+                className="group bg-white rounded-2xl shadow-lg will-change-transform"
+                whileHover={{ 
+                  y: -5,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  transition: { type: "tween", ease: "easeOut", duration: 0.2 }
+                }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-pink-100 to-brand-cream-100 
-                  rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 
                 <div className="relative p-8 flex flex-col items-center space-y-4">
-                  <div className="text-brand-pink-500 group-hover:text-brand-pink-600 
-                    transform group-hover:scale-110 transition-all duration-300">
+                  <motion.div 
+                    variants={iconVariants}
+                    className="text-brand-pink-500 group-hover:text-brand-pink-600 will-change-transform"
+                    whileHover={{ scale: 1.1, transition: { type: "spring", stiffness: 300, damping: 10 } }}
+                  >
                     {typeof social.icon === 'function' ? social.icon() : social.icon}
-                  </div>
+                  </motion.div>
                   <span className="text-xl font-semibold text-brand-pink-700 
-                    group-hover:text-brand-pink-800 transition-colors">
+                    group-hover:text-brand-pink-800 transition-colors duration-200">
                     {social.name}
                   </span>
                 </div>
@@ -105,4 +129,4 @@ const Contact = () => {
   );
 };
 
-export default Contact; 
+export default Contact;
