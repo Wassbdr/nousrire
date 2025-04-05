@@ -18,7 +18,7 @@ import {
   deleteObject 
 } from 'firebase/storage';
 import { db, storage } from '../config/firebase';
-import { NewsItem, NewsFormData, Event, EventFormData } from '../types';
+import { NewsItem, NewsFormData, Event, EventFormData, Volunteer } from '../types';
 import { compressImage } from './imageCompression';
 
 // News functions with limit
@@ -78,11 +78,13 @@ export const addNews = async (newsData: NewsFormData): Promise<NewsItem> => {
     if (newsData.image) {
       try {
         const compressedImage = await compressImage(newsData.image);
-        const fileName = Date.now() + '-' + compressedImage.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const storageRef = ref(storage, `news-images/${fileName}`);
-        const metadata = { contentType: compressedImage.type };
-        const uploadResult = await uploadBytes(storageRef, compressedImage, metadata);
-        imageUrl = await getDownloadURL(uploadResult.ref);
+        const storageRef = ref(storage, `images/${compressedImage.name}`);
+        const metadata = {
+          contentType: compressedImage.type,
+          cacheControl: 'public, max-age=31536000',
+        };
+        await uploadBytes(storageRef, compressedImage, metadata);
+        imageUrl = await getDownloadURL(storageRef);
       } catch (uploadError) {
         console.error('Error uploading image:', uploadError);
         // Continue without image if upload fails
@@ -244,3 +246,65 @@ export const deleteEvent = async (id: string): Promise<void> => {
     throw error;
   }
 };
+
+export const getVolunteers = async (): Promise<Volunteer[]> => {
+  try {
+    const volunteersSnapshot = await getDocs(
+      query(collection(db, 'volunteers'), orderBy('createdAt', 'desc'))
+    );
+    
+    return volunteersSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message || '',
+        distribution: data.distribution || '',
+        createdAt: data.createdAt
+      };
+    }) as Volunteer[];
+  } catch (error) {
+    console.error('Error getting volunteers:', error);
+    // Add more specific error handling
+    if (error instanceof Error && error.toString().includes('Missing or insufficient permissions')) {
+      throw new Error('Erreur d\'accès: Assurez-vous d\'être correctement connecté avec un compte autorisé.');
+    }
+    throw error;
+  }
+};
+
+export const deleteVolunteer = async (id: string): Promise<void> => {
+  try {
+    // Get the volunteer data before deletion to handle cleanup
+    const volunteerRef = doc(db, 'volunteers', id);
+    const volunteerDoc = await getDoc(volunteerRef);
+    const volunteerData = volunteerDoc.data();
+    
+    // Delete the volunteer document
+    await deleteDoc(volunteerRef);
+    
+    // If possible, clean up the corresponding entry in volunteers_submissions
+    if (volunteerData && volunteerData.email) {
+      try {
+        const submissionRef = doc(db, 'volunteers_submissions', volunteerData.email);
+        const submissionDoc = await getDoc(submissionRef);
+        
+        // Only delete if the document exists
+        if (submissionDoc.exists()) {
+          await deleteDoc(submissionRef);
+        }
+      } catch (cleanupError) {
+        // Log but don't throw, since the main deletion succeeded
+        console.error('Error cleaning up volunteer submission record:', cleanupError);
+      }
+    }
+    
+    console.log('Volunteer deleted successfully');
+  } catch (error) {
+    console.error('Error deleting volunteer:', error);
+    throw error;
+  }
+};
+

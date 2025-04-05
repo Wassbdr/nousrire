@@ -97,6 +97,16 @@ const Volunteer = () => {
       setError('Veuillez corriger les erreurs dans le formulaire');
       return;
     }
+
+    // Rate limiting - Check if user has submitted recently
+    const lastSubmitTime = localStorage.getItem('lastVolunteerSubmitTime');
+    const cooldownPeriod = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    
+    if (lastSubmitTime && Date.now() - parseInt(lastSubmitTime) < cooldownPeriod) {
+      setSubmitStatus('error');
+      setError('Vous avez déjà soumis une candidature récemment. Veuillez attendre 24 heures avant de soumettre une nouvelle demande.');
+      return;
+    }
     
     setIsSubmitting(true);
     
@@ -112,6 +122,9 @@ const Volunteer = () => {
       const success = await sendVolunteerEmail(sanitizedData);
       setSubmitStatus(success ? 'success' : 'error');
       if (success) {
+        // Store submission time
+        localStorage.setItem('lastVolunteerSubmitTime', Date.now().toString());
+        
         setFormData({ name: '', email: '', phone: '', message: '', distribution: selectedDistribution?.id || '' });
         setTouched({ name: false, email: false, phone: false });
       }

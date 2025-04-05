@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getNews } from '../services/firestoreService';
-import { NewsItem } from '../types'; 
+import { NewsItem as NewsItemType } from '../types'; 
+import { OptimizedImage } from './OptimizedImage';
 
 const News = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<NewsItemType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -130,7 +131,7 @@ const News = () => {
 };
 
 // Extract card to its own component
-const NewsCard = ({ item }: { item: NewsItem }) => {
+const NewsCard = ({ item }: { item: NewsItemType }) => {
   return (
     <motion.div
       variants={{
@@ -151,15 +152,7 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
       className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
     >
       {item.image && (
-        <div className="relative h-48 overflow-hidden">
-          <motion.img
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.5 }}
-            src={item.image}
-            alt={item.title}
-            className="w-full h-full object-cover transition-transform duration-500"
-          />
-        </div>
+        <LazyNewsImage src={item.image} alt={item.title} />
       )}
       <div className="p-6">
         <h3 className="text-xl font-bold text-brand-pink-700 mb-2">
@@ -175,5 +168,66 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
     </motion.div>
   );
 };
+
+// Lazy loading image component
+function LazyNewsImage({ src, alt }: { src: string; alt: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    // Store the current ref value
+    const currentRef = imgRef.current;
+    
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+    
+    return () => {
+      // No need to check imgRef.current here
+      // The disconnect() method clears all observations
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div ref={imgRef} className="relative h-48 w-full">
+      {isVisible && !hasError ? (
+        <OptimizedImage 
+          src={src}
+          imageName={src.split('/').pop() || ''}
+          alt={alt}
+          width={400} 
+          height={300}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setIsLoaded(true)}
+          onError={() => setHasError(true)}
+        />
+      ) : isVisible && hasError ? (
+        <OptimizedImage 
+          src="/images/news-placeholder.webp"
+          imageName="news-placeholder.webp"
+          alt={alt}
+          width={800}
+          height={600}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full bg-gray-200 animate-pulse"></div>
+      )}
+    </div>
+  );
+}
 
 export default News;

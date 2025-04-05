@@ -1,6 +1,7 @@
 import { HeartIcon, LightBulbIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+import { OptimizedImage } from './OptimizedImage';
 
 // Define interface for CardItem props
 interface CardItemProps {
@@ -94,11 +95,13 @@ const About = () => {
               
               <div className="rounded-xl overflow-hidden shadow-md">
                 <div className="aspect-w-4 aspect-h-3">
-                  <img
-                    src="https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/benevoles.webp?alt=media&token=93bc5d53-86e0-4d38-bbd5-7b454e86d910"
-                    alt="Benévoles de l'association"
-                    className="w-full h-full object-cover object-center"
-                    loading="lazy"
+                  <OptimizedImage 
+                    src="https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/distribution.webp?alt=media&token=..."
+                    imageName="distribution.webp" 
+                    alt="Description"
+                    width={800}
+                    height={600}
+                    className="w-full h-full object-cover" 
                   />
                 </div>
               </div>

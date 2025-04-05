@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import AdminRoute from './components/AdminRoute';
@@ -11,8 +11,9 @@ import Footer from './components/Footer';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import Events from './components/Events';
-import News from './components/News';
 import Volunteer from './components/Volunteer';
+
+const News = lazy(() => import('./components/News'));
 
 const AppContent = () => {
   const location = useLocation();
@@ -35,7 +36,9 @@ const AppContent = () => {
                   <About />
                 </section>
                 <section id="actions">
-                  <News />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <News />
+                  </Suspense>
                 </section>
                 <section id="calendrier">
                   <Events />

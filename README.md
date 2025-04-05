@@ -3,6 +3,7 @@
 ![Maraude 92](/public/images/maraude_logo.svg)
 
 Ce projet est le site web officiel de l'association Maraude 92, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité dans le département des Hauts-de-Seine (92).
+Le site se trouve à l'addresse: https://maraude-92.web.app
 
 ## 📋 Table des matières
 - [Aperçu](#aperçu)
@@ -78,7 +79,7 @@ src/
 
 1. Clonez le dépôt :
 ```bash
-git clone https://github.com/votre-username/nourir.git
+git clone https://github.com/Wassbdr/maraude-92
 cd nourir
 ```
 

@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface NewsItem {
   id: string;
   title: string;
@@ -25,4 +27,13 @@ export interface EventFormData {
   date: string;
   time: string;
   location: string;
+}
+
+export interface Volunteer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  createdAt: Timestamp;
 }

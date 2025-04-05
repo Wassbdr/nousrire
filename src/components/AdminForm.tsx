@@ -3,7 +3,7 @@ import { NewsFormData, EventFormData } from '../types';
 import DOMPurify from 'dompurify';
 
 interface AdminFormProps {
-  type: 'news' | 'events';
+  type: 'news' | 'events' | 'volunteers';
   onClose: () => void;
   onSubmit: (data: NewsFormData | EventFormData) => void;
   initialData?: NewsFormData | EventFormData;

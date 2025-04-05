@@ -1,18 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { PlusIcon, NewspaperIcon, CalendarIcon, TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, NewspaperIcon, CalendarIcon, TrashIcon, PencilIcon, UserIcon } from '@heroicons/react/24/outline';
 import AdminForm from '../components/AdminForm';
 import { 
   getNews, addNews, deleteNews, 
-  getEvents, addEvent, updateEvent, deleteEvent 
-} from '../services/firestoreService';
+  getEvents, addEvent, updateEvent, deleteEvent,
+  getVolunteers, deleteVolunteer } from '../services/firestoreService';
 import { NewsItem, NewsFormData, Event, EventFormData } from '../types';
+import { Timestamp } from 'firebase/firestore';
+
+interface Volunteer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  createdAt: Timestamp;
+}
 
 const Admin = () => {
   const { logout, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<'news' | 'events'>('news');
+  const [activeTab, setActiveTab] = useState<'news' | 'events' | 'volunteers'>('news');
   const [news, setNews] = useState<NewsItem[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingItem, setEditingItem] = useState<NewsItem | Event | null>(null);
@@ -26,13 +37,16 @@ const Admin = () => {
         if (activeTab === 'news') {
           const newsData = await getNews();
           setNews(newsData);
-        } else {
+        } else if (activeTab === 'events') {
           const eventsData = await getEvents();
           setEvents(eventsData);
+        } else if (activeTab === 'volunteers') {
+          const volunteersData = await getVolunteers();
+          setVolunteers(volunteersData);
         }
       } catch (err) {
         console.error(`Error fetching ${activeTab}:`, err);
-        setError(`Erreur lors du chargement des ${activeTab === 'news' ? 'actualités' : 'événements'}`);
+        setError(`Erreur lors du chargement des ${activeTab === 'news' ? 'actualités' : activeTab === 'events' ? 'événements' : 'bénévoles'}`);
       } finally {
         setLoading(false);
       }
@@ -144,6 +158,16 @@ const Admin = () => {
     }
   };
 
+  const handleDeleteVolunteer = async (id: string) => {
+    try {
+      await deleteVolunteer(id);
+      setVolunteers((prev) => prev.filter((volunteer) => volunteer.id !== id));
+    } catch (err) {
+      console.error("Error deleting volunteer:", err);
+      setError("Erreur lors de la suppression de la demande de bénévolat");
+    }
+  };
+
   const getFormDataFromItem = (): NewsFormData | EventFormData | undefined => {
     if (!isEditing || !editingItem) return undefined;
     
@@ -218,19 +242,31 @@ const Admin = () => {
               <CalendarIcon className="h-5 w-5 mr-2" />
               Événements
             </button>
+            <button
+              onClick={() => setActiveTab('volunteers')}
+              className={`${
+                activeTab === 'volunteers'
+                  ? 'border-brand-pink-500 text-brand-pink-700'
+                  : 'border-transparent text-brand-pink-400 hover:text-brand-pink-700 hover:border-brand-pink-200'
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center`}
+                >
+              <UserIcon className="h-5 w-5 mr-2" />
+              Bénévoles
+            </button>
           </nav>
         </div>
-
-        <div className="mb-6">
-          <button
-            onClick={activeTab === 'news' ? handleCreateNews : handleCreateEvent}
-            className="inline-flex items-center px-4 py-2 bg-brand-pink-500 text-white rounded-lg hover:bg-brand-pink-600 transition-colors"
-          >
-            <PlusIcon className="h-5 w-5 mr-2" />
-            {activeTab === 'news' ? 'Nouvelle actualité' : 'Nouvel événement'}
-          </button>
-        </div>
-
+        {activeTab !== 'volunteers' && (
+          <div className="mb-6">
+              <button
+                onClick={activeTab === 'news' ? handleCreateNews : handleCreateEvent}
+                className="inline-flex items-center px-4 py-2 bg-brand-pink-500 text-white rounded-lg hover:bg-brand-pink-600 transition-colors"
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                  {activeTab === 'news' ? 'Nouvelle actualité' : 'Nouvel événement'}
+                
+              </button>
+          </div>
+        )}
         <div className="bg-white rounded-lg shadow">
           {loading ? (
             <div className="p-6 text-center">
@@ -274,7 +310,7 @@ const Admin = () => {
                 ))
               )}
             </div>
-          ) : (
+          ) : activeTab === 'events' ? (
             <div className="divide-y divide-brand-pink-200">
               {events.length === 0 ? (
                 <div className="p-6 text-center text-brand-pink-500">
@@ -310,6 +346,60 @@ const Admin = () => {
                   </div>
                 ))
               )}
+            </div>
+          ) : (
+            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+              <div className="p-6 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-brand-pink-700">Demandes de bénévolat</h2>
+              </div>
+              
+              <div className="divide-y divide-gray-200">
+                {loading ? (
+                  <div className="p-6 text-center">
+                    <p>Chargement des demandes...</p>
+                  </div>
+                ) : volunteers.length === 0 ? (
+                  <div className="p-6 text-center">
+                    <p>Aucune demande de bénévolat pour le moment.</p>
+                  </div>
+                ) : (
+                  volunteers.map((volunteer) => (
+                    <div key={volunteer.id} className="p-6">
+                      <div className="flex flex-col space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-medium text-brand-pink-700">{volunteer.name}</h3>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => handleDeleteVolunteer(volunteer.id)}
+                              className="text-red-500 hover:text-red-700 transition-colors p-1 rounded-full hover:bg-red-50"
+                              title="Supprimer cette demande"
+                            >
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm"><span className="font-medium">Email:</span> {volunteer.email}</p>
+                          <p className="text-sm"><span className="font-medium">Téléphone:</span> {volunteer.phone}</p>
+                          {volunteer.message && (
+                            <p className="text-sm mt-2"><span className="font-medium">Message:</span> {volunteer.message}</p>
+                          )}
+                          <p className="text-xs text-gray-500 mt-2">
+                            Reçu le {new Date(volunteer.createdAt.toDate()).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           )}
         </div>

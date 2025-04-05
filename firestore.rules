@@ -2,11 +2,12 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Function to verify if user is an admin
+    // Function to verify authentication
     function isAuthenticated() {
       return request.auth != null;
     }
-    // Allow public read access to news and events, but require admin for writes
+    
+    // Allow public read access to news and events, but require authentication for writes
     match /news/{newsId} {
       allow read: if true;
       allow write: if isAuthenticated();
@@ -21,6 +22,45 @@ service cloud.firestore {
     match /admins/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow write: if false; // Only managed via Firebase Console or Admin SDK
+    }
+    
+    // Rules for volunteers collection
+    match /volunteers/{volunteerId} {
+      // Helper functions for rate limiting and duplicate prevention
+      function hasNotRecentlySubmitted() {
+        // Check if this email has a recent submission record
+        return !exists(/databases/$(database)/documents/volunteers_submissions/$(request.resource.data.email));
+      }
+      
+      function emailNotAlreadyRegistered() {
+        // Check if this email is already registered for this specific event
+        let eventId = request.resource.data.distribution;
+        // Note: We can't use complex queries in security rules
+        // We'll rely on the submission tracker instead
+        return true;
+      }
+      
+      function isValidVolunteerData() {
+        // Validate the data structure
+        let hasName = request.resource.data.name != null;
+        let hasEmail = request.resource.data.email != null;
+        let hasPhone = request.resource.data.phone != null;
+        
+        // Simple email validation
+        let validEmail = request.resource.data.email.matches(".*@.*\\..*");
+        
+        return hasName && hasEmail && hasPhone && validEmail;
+      }
+      
+      allow read: if isAuthenticated();
+      allow create: if isValidVolunteerData() && hasNotRecentlySubmitted();
+      allow update, delete: if isAuthenticated(); // Only authenticated users can update/delete
+    }
+    
+    // Track email submissions to prevent spam
+    match /volunteers_submissions/{email} {
+      allow create: if true;
+      allow read, update, delete: if isAuthenticated();
     }
     
     // Block access to all other collections

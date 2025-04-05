@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { OptimizedImage } from './OptimizedImage';
 
 interface Stat {
   value: string;
@@ -40,15 +41,15 @@ const Hero = () => {
   // Memoized array of carousel images to prevent unnecessary re-renders
   const images = useMemo(() => [
     {
-      src: "https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/distribution.webp?alt=media&token=bb431afe-2bed-47dd-aed3-334e9ecd07ce",
+      src: "/images/optimized/distribution.webp",
       alt: "Distribution alimentaire"
     },
     {
-      src: "https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/action.webp?alt=media&token=2580e2a8-dcf0-401d-ae26-cfa045d29f33", 
+      src: "/images/optimized/action.webp",
       alt: "Nos bénévoles en action"
     },
     {
-      src: "https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/social.webp?alt=media&token=d6de1ea5-9c8c-48c1-a19b-cd3c5ba7bdb6",
+      src: "/images/optimized/social.webp",
       alt: "Moment social avec les bénéficiaires"
     }
   ], []);
@@ -127,9 +128,12 @@ const Hero = () => {
     >
       {/* Background logo with reduced opacity */}
       <div className="absolute inset-0 flex items-center justify-center opacity-10">
-        <img 
-          src="https://firebasestorage.googleapis.com/v0/b/maraude-92.firebasestorage.app/o/maraude_bg.webp?alt=media&token=10584ecd-d012-45eb-951e-1d33ccf105b6" 
+        <OptimizedImage 
+          src="/images/optimized/maraude_bg.webp" 
+          imageName="maraude_bg.webp"
           alt="Background Logo" 
+          width={1920}
+          height={1080}
           className="w-[120%] h-[120%] object-cover"
         />
       </div>
@@ -197,9 +201,12 @@ const Hero = () => {
                     {imageLoaded[index] ? null : (
                       <div className="animate-pulse text-brand-pink-500">Chargement...</div>
                     )}
-                    <img
-                      src={image.src}
+                    <OptimizedImage 
+                      src={image.src} 
+                      imageName={image.src.split('/').pop() || ''}
                       alt={image.alt}
+                      width={800} 
+                      height={600}
                       className={`object-cover w-full h-full ${!imageLoaded[index] && 'opacity-0'}`}
                       onLoad={() => handleImageLoaded(index)}
                     />
