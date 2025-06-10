@@ -5,12 +5,12 @@
 export const getImagePath = (imageName: string, firebaseUrl?: string): string => {
     // List of images available locally
     const localImages = [
-      'maraude_bg.webp',
+      'nousrire.webp',
       'distribution.webp',
       'action.webp',
       'social.webp',
       'benevoles.webp',
-      'maraude_logo.svg'
+      'nousrire_logo.svg'
     ];
     
     // If the image name is in our local images list, use the local path

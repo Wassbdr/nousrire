@@ -59,12 +59,14 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <img
-              src="/images/maraude_logo.svg"
-              alt="Maraude 92 Logo"
+              src="/images/nousrire_logo.svg"
+              alt="Nous'Rire Logo"
               className="h-12 w-auto transform hover:scale-105 transition-transform duration-300"
             />
-            <span className="font-bayon text-2xl text-brand-pink-700 ml-2 uppercase tracking-wider">
-              MARAUDE 92
+            <span className="font-bayon text-2xl text-brand-pink-500 ml-2 uppercase tracking-wider">
+            <span className="font-bayon text-2xl text-brand-cream-500 ml-2 uppercase tracking-wider">
+            Nous
+            </span>'RIRE
             </span>
           </div>
 

@@ -1,8 +1,9 @@
 {
-  "name": "nourir",
+  "name": "nousrire-app",
   "version": "0.1.0",
-  "homepage": "https://maraude-92.web.app",
+  "homepage": "https://nousrire.org",
   "private": true,
+  "description": "Site web de l'association Nous'Rire",
   "dependencies": {
     "@emailjs/browser": "^3.11.0",
     "@headlessui/react": "^1.7.18",

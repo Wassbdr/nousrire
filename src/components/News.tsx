@@ -71,7 +71,7 @@ const News = () => {
   };
 
   return (
-    <div className="relative py-24 overflow-hidden">
+    <div className="relative py-24 overflow-hidden bg-gradient-to-b from-brand-cream-100 via-brand-cream-100 to-brand-cream-50">
       <div className="relative container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -84,7 +84,7 @@ const News = () => {
             Dernières Actualités
           </h2>
           <p className="text-xl text-brand-pink-600 max-w-3xl mx-auto">
-            Restez informé des dernières actions et initiatives de Maraude 92
+            Restez informé des dernières actions et initiatives de Nous'Rire
           </p>
         </motion.div>
 

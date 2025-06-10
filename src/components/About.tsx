@@ -13,7 +13,7 @@ interface CardItemProps {
 
 const About = () => {
   return (
-    <div className="relative py-24 bg-gradient-to-b from-brand-cream via-brand-cream-100 to-white">
+    <div className="relative py-24 bg-gradient-to-b from-brand-cream-50 via-brand-cream-100 to-brand-cream-100">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <motion.div 
@@ -86,7 +86,7 @@ const About = () => {
                   Notre Histoire
                 </h3>
                 <p className="text-brand-pink-600 text-lg leading-relaxed">
-                  La Maraude 92 est née de la volonté de citoyens engagés de lutter contre la précarité
+                  Nous'Rire est née de la volonté de citoyens engagés de lutter contre la précarité
                   alimentaire. Depuis notre création, nous nous efforçons d'apporter une aide
                   concrète aux personnes dans le besoin, en distribuant des repas et en créant
                   des moments de partage et de convivialité.

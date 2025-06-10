@@ -81,8 +81,8 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
             <Link to="/" className="block mb-6">
               <img
-                src="/images/maraude_logo.svg"
-                alt="Maraude 92 Logo"
+                src="/images/nousrire_logo.svg"
+                alt="Nous'Rire Logo"
                 className="h-12 w-auto"
               />
             </Link>
@@ -157,7 +157,7 @@ const Footer = () => {
           variants={itemVariants}
           className="border-t border-brand-pink-200 mt-12 pt-8 text-center text-brand-pink-700/60"
         >
-          <p>© {new Date().getFullYear()} Maraude 92. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} Nous'Rire. Tous droits réservés.</p>
         </motion.div>
       </motion.div>
     </footer>

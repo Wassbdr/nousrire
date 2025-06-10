@@ -12,7 +12,7 @@ export const sendVolunteerEmail = async (formData: any) => {
     const emailMessage = `
 Bonjour ${formData.name},
 
-Merci beaucoup pour votre demande de bénévolat auprès de Maraude 92 ! 
+Merci beaucoup pour votre demande de bénévolat auprès de Nous'Rire ! 
 
 Votre générosité et votre désir d'aider notre communauté sont précieux. Nous avons bien enregistré votre candidature et un membre de notre équipe vous contactera dans les prochains jours pour discuter des possibilités de bénévolat.
 
@@ -28,8 +28,8 @@ Nous vous remercions sincèrement pour votre engagement solidaire et sommes impa
 
 Chaleureusement,
 
-L'équipe Maraude 92
-https://maraude-92.web.app
+L'équipe Nous'Rire
+https://nousrire.org
 Suivez-nous sur les réseaux sociaux :
 Instagram: @maraude092
 Snapchat: @maraude92

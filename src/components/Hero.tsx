@@ -124,17 +124,17 @@ const Hero = () => {
   return (
     <section 
       id="accueil" 
-      className="relative bg-gradient-to-b from-white via-brand-cream-100 to-brand-cream overflow-hidden pt-20 pb-12"
+      className="relative bg-gradient-to-b from-brand-cream-50 via-brand-cream-100 to-brand-cream-50 overflow-hidden pt-20 pb-12"
     >
-      {/* Background logo with reduced opacity */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+      {/* Background logo with reduced opacity lower*/}
+      <div className="absolute inset-0 glex items-center justify-center opacity-20">
         <OptimizedImage 
-          src="/images/optimized/maraude_bg.webp" 
-          imageName="maraude_bg.webp"
+          src="/images/optimized/nousrire_bg.webp" 
+          imageName="nousrire_bg.webp"
           alt="Background Logo" 
           width={1920}
           height={1080}
-          className="w-[120%] h-[120%] object-cover"
+          className="w-[120%] h-[150%] object-cover"
         />
       </div>
 
@@ -154,7 +154,7 @@ const Hero = () => {
               Ensemble, luttons contre la précarité alimentaire
             </h1>
             <p className="text-lg text-brand-pink-dark/80 mb-8">
-              Maraude 92 est une association caritative qui s'engage à distribuer des denrées alimentaires 
+              Nous'Rire est une association caritative qui s'engage à distribuer des denrées alimentaires 
               aux personnes dans le besoin. Notre mission est de garantir l'accès à une alimentation 
               saine et équilibrée pour tous.
             </p>
@@ -169,7 +169,7 @@ const Hero = () => {
               </motion.a>
               <motion.a
                 href="#calendrier"
-                className="btn-secondary border-2 border-brand-pink bg-brand-cream hover:bg-brand-pink hover:text-white px-8 py-3 rounded-full font-medium transition-colors text-brand-pink-dark"
+                className="btn-secondary border-2 border-brand-pink bg-brand-cream hover:bg-brand-pink-dark hover:text-white px-8 py-3 rounded-full font-medium transition-colors text-brand-pink-dark"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

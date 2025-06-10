@@ -1,9 +1,9 @@
-# Maraude 92 - Site Web de l'Association
+# Nous'Rire - Site Web de l'Association
 
-![Maraude 92](/public/images/maraude_logo.svg)
+![Nous'Rire](/public/images/maraude_logo.svg)
 
-Ce projet est le site web officiel de l'association Maraude 92, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité dans le département des Hauts-de-Seine (92).
-Le site se trouve à l'addresse: https://maraude-92.web.app
+Ce projet est le site web officiel de l'association Nous'Rire, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité dans le département des Hauts-de-Seine (92).
+Le site se trouve à l'addresse: https://nousrire.org
 
 ## 📋 Table des matières
 - [Aperçu](#aperçu)
@@ -19,7 +19,7 @@ Le site se trouve à l'addresse: https://maraude-92.web.app
 
 ## 🌟 Aperçu
 
-Maraude 92 est une plateforme web qui permet à l'association de présenter ses activités, partager des actualités, planifier des événements et faciliter l'engagement des bénévoles et donateurs potentiels.
+Nous'Rire est une plateforme web qui permet à l'association de présenter ses activités, partager des actualités, planifier des événements et faciliter l'engagement des bénévoles et donateurs potentiels.
 
 ## 🛠️ Technologies utilisées
 
@@ -79,8 +79,8 @@ src/
 
 1. Clonez le dépôt :
 ```bash
-git clone https://github.com/Wassbdr/maraude-92
-cd nourir
+git clone https://github.com/Wassbdr/nousrire
+cd nousrire
 ```
 
 2. Installez les dépendances :
@@ -154,4 +154,4 @@ Pour toute question ou suggestion concernant ce projet, contactez-nous à [nousr
 
 ---
 
-Développé avec ❤️ pour Maraude 92
+Développé avec ❤️ pour Nous'Rire
