@@ -13,8 +13,8 @@ module.exports = {
             200: '#FFD6E6',
             300: '#FFA6D5',
             400: '#FF87C3',
-            500: '#ff8c93', // Base pink
-            600: '#FF4DA6',
+            500: '#feaba3', // Base pink
+            600: '#ff71b8',
             700: '#D4367D',
             800: '#A62E6B',
             900: '#7A2250', 
@@ -25,7 +25,7 @@ module.exports = {
             200: '#FFF3D6',
             300: '#FFE4B5',
             400: '#FFD89A',
-            500: '#ffe6aa', // Base cream
+            500: '#fbe7b4', // Base cream
             600: '#FFB366',
             700: '#FF994D',
             800: '#FF8033',

@@ -63,10 +63,9 @@ const Navbar = () => {
               alt="Nous'Rire Logo"
               className="h-12 w-auto transform hover:scale-105 transition-transform duration-300"
             />
-            <span className="font-bayon text-2xl text-brand-pink-500 ml-2 uppercase tracking-wider">
-            <span className="font-bayon text-2xl text-brand-cream-500 ml-2 uppercase tracking-wider">
-            Nous
-            </span>'RIRE
+            {/* Title with gradient*/}
+            <span className="ml-3 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-cream-500 to-brand-pink-500">
+              NOUS'RIRE
             </span>
           </div>
 
