@@ -1,6 +1,6 @@
 # Nous'Rire - Site Web de l'Association
 
-![Nous'Rire](/public/images/maraude_logo.svg)
+![Nous'Rire](/public/images/nousrire_logo.svg)
 
 Ce projet est le site web officiel de l'association Nous'Rire, une organisation dédiée à la distribution alimentaire et à la lutte contre la précarité dans le département des Hauts-de-Seine (92).
 Le site se trouve à l'addresse: https://nousrire.org
